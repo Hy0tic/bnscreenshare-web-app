@@ -6,7 +6,7 @@ const url = import.meta.env.VITE_API_URL;
 export const getConnection = () => {
 	if (!connection) {
 		connection = new signalR.HubConnectionBuilder()
-			.withUrl(`${url}/lobby-hub`, {
+			.withUrl(`${url}/janus-hub`, {
 				skipNegotiation: true,
 				transport: signalR.HttpTransportType.WebSockets,
 			})

@@ -32,6 +32,9 @@ const servers = {
 const Interface = () => {
     const [lobbyId, setLobbyId] = useState("");
     const [value, setValue] = useState("");
+    const [janusOfferSDP, setJanusOfferSDP] = useState("");
+    const [sessionId, setSessionId] = useState("");
+    const [pluginId, setPluginId] = useState("");
 
     const connection = useContext(SignalRContext);
     const handleChange = (event: { target: { value: SetStateAction<string>; }; }) => {
@@ -170,6 +173,59 @@ const Interface = () => {
             audioTrack.enabled = !audioTrack.enabled;
         }
     }
+
+    const handleReceiveSessionId = async (value:string) =>{
+        console.log(value);
+        setSessionId(value);
+    }
+    const handleReceivePluginId = async (value:string) =>{
+        console.log(value);
+        setPluginId(value);
+    }
+    const createJanusOfferAndSend = async () => {
+      if (!peerConnection) {
+        connection?.on("ReceiveSessionId", handleReceiveSessionId)
+        connection?.on("ReceivePluginId", handleReceivePluginId)
+        connection?.invoke("InitializeJanusSession");
+        peerConnection = new RTCPeerConnection(servers);
+    
+        peerConnection.onicecandidate = async (event) => {
+            if(event.candidate)
+            {
+                connection?.invoke("SendICECandidateAsync", event.candidate);
+            }
+        }
+      }
+    
+      if (!localStream) {
+        try {
+          localStream = await navigator.mediaDevices.getDisplayMedia(streamSetting);
+        } catch (err) {
+          console.error("Error getting display media:", err);
+          return;
+        }
+    
+        localStream.getTracks().forEach((track) => {
+          peerConnection.addTrack(track, localStream);
+        });
+      }
+    
+      try {
+        const offer = await peerConnection.createOffer();
+        await peerConnection.setLocalDescription(offer);
+    
+        if (offer.sdp) {
+          setJanusOfferSDP(offer.sdp);
+          console.log(offer);
+          // Send the offer to Janus once all ICE candidates are gathered
+        }
+      } catch (err) {
+        console.error("Error creating offer:", err);
+      }
+    };
+    
+
+    
     
     useEffect(() => {
         connection?.start()
@@ -181,6 +237,8 @@ const Interface = () => {
             connection.on("CallerLeft", handleUserLeft);
           })
           .catch((e) => console.log("Connection failed: ", e));
+
+        createJanusOfferAndSend()
         }, [])
     window.addEventListener('beforeunload', leaveLobby);
     
