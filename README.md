@@ -5,8 +5,10 @@
 
 A simple and convenient way to screenshare through browser
 
-[link](https://thankful-bush-0e0949c0f.3.azurestaticapps.net/)
+[Vultr URL](https://bnscreenshare.bnlabsolutions.net/)
+[Azure URL](https://thankful-bush-0e0949c0f.3.azurestaticapps.net/)
 
+[Trello Board](trello.com/b/1A3sIg41/bnscreenshare)
 # Run Locally
 Prerequisites:
 * Have [Node.JS](https://nodejs.org/en) installed (version 16 or later will work)
@@ -24,7 +26,7 @@ Install and Run:
 \
 \
  **Note**: 
-* Due to browser limitations, sharing an app's audio or the whole computer's audio isn't possible, however, with Google Chrome, sharing a tab's audio is possible
+* Due to browser limitations, sharing a window's audio isn't possible, however, with Google Chrome, sharing a tab's audio or system audio is possible
 
 # Technologies
 * React
