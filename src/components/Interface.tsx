@@ -126,6 +126,9 @@ const Interface = () => {
                                     <li className="flex flex-row"><img className="h-5 mr-2" src="https://bucket.bn-chat.net/bnft.svg"/>Includes lobby chat system</li>
                                     <li className="flex flex-row"><img className="h-5 mr-2" src="https://bucket.bn-chat.net/bnft.svg"/>No login necessary</li>
                                 </ul>
+                                <div className="text-sm pt-2">
+                                warning: if you can't see the stream, you may need to enable WebRTC in your browser
+                                </div>
                         </div>
                         <Box className=" bg-gray-800 rounded-lg w-1/3 h-4/6 relative drop-shadow-lg m-10 mt-0 mb-0">
                             <div className="Join-Lobby border-b-2 border-slate-700">
