@@ -49,4 +49,4 @@ jobs:
 
     - name: Copy build directory to server
       run: |
-        rsync -av --delete ./dist/ ${{ secrets.PROD_SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:/home/kevin/bnscreenshare/
+        rsync -rlptDv --delete ./dist/ ${{ secrets.PROD_SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:/home/kevin/bnscreenshare/
