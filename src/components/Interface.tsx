@@ -21,7 +21,7 @@ const Interface = () => {
             username: ''
           },
           validate: {
-            lobbyId: (value) => (/^.{5}$/.test(value) ? null : 'Invalid Id'),
+            lobbyId: (value) => (/^.{3,}$/.test(value) ? null : 'Invalid Id'),
           },
       });
 
@@ -61,11 +61,13 @@ const Interface = () => {
         setIsHost(true);
         setUsername("host");
     }
+    
     const leaveLobby = () =>{
         connection?.invoke("LeaveLobby", lobbyId);
         webrtc?.endStream();
         setLobbyId("");
     }
+
     const handleCopy = async () => {
         try {
           await navigator.clipboard.writeText(lobbyId);
@@ -115,7 +117,8 @@ const Interface = () => {
                         </div>
                     </div>)
                     : 
-                    (<div className="bg-slate-700 rounded-lg w-2/4 h-3/6 left-1/4 right-1/4 absolute flex items-center justify-between mt-20">
+                    (<>
+                    <div className="bg-slate-700 rounded-lg w-2/4 h-3/6 left-1/4 right-1/4 absolute flex items-center justify-between mt-20">
                         <div className="Info text-xl m-10">
                             <h1 className="font-bold text-5xl drop-shadow-2xl">
                                 No Hassle <br/>Screen Sharing
@@ -168,7 +171,8 @@ const Interface = () => {
                                     </div>
                             </div>
                         </Box>
-                    </div>)
+                    </div>
+                    </>)
                 }
             </div>
         </>
