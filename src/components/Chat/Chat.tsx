@@ -50,9 +50,9 @@ const Chat = ({Username, LobbyId} : {Username: string, LobbyId : string}) => {
     }
 
     return (<div className="flex-col relative ml-3 h-75vh w-1/5 bg-gray-900 rounded-md overflow-hidden">
-        <div className="messages h-5/6 w-full flex-1 p-10 overflow-scroll break-words no-scrollbar text-slate-500">
+        <div className="messages h-5/6 w-full flex-1 p-10 overflow-scroll break-words no-scrollbar text-slate-300">
             {messages.map((message: { username: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; content: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; }, index: Key | null | undefined) => (
-                <div key={index} className="message mb-1">
+                <div key={index} className="message mb-1 text-xl">
                     <strong>{message.username}:</strong> {message.content}
                 </div>
             ))}
@@ -61,14 +61,12 @@ const Chat = ({Username, LobbyId} : {Username: string, LobbyId : string}) => {
 
         <form onSubmit={sendMessage} className="InputArea border-2 border-gray-700 bg-gray-900 absolute bottom-0 w-full h-auto">
             <div className="relative flex flex-row">
-                <input maxLength={130} className="bg-gray-950 ml-1 w-full overflow-scroll" value={content} onChange={(e) => setContent(e.target.value)} placeholder="say something nice" />
-                <div className="absolute inset-y-0 right-2 inline-flex items-center bg-slate-700">
+                    <input maxLength={130} className="bg-gray-950 ml-1 w-full overflow-scroll" value={content} onChange={(e) => setContent(e.target.value)} placeholder="type a message" />
                     <EmojiPickerButton
                         onEmojiPick={(emoji) =>
                             setContent((content) => content.concat(emoji))
                         }
                     />
-                </div>
             </div>
         </form> 
    
