@@ -22,6 +22,7 @@ const Interface = () => {
           },
           validate: {
             lobbyId: (value) => (/^.{3,}$/.test(value) ? null : 'Invalid Id'),
+            username: (value) => (/^.{1,}$/.test(value) ? null : 'username cant be empty')
           },
       });
 
