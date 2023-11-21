@@ -13,7 +13,6 @@ export default function useEmojiPicker(
     }
 
     const toggleEmojiPicker: React.MouseEventHandler = () => {
-        console.log("open/close")
         setIsOpen((isOpen) => !isOpen)
     }
 

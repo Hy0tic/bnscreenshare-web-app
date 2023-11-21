@@ -11,6 +11,7 @@ export const getConnection = () => {
 					skipNegotiation: true,
 					transport: signalR.HttpTransportType.WebSockets,
 				})
+				.withAutomaticReconnect([0, 1000, 5000, 10000])
 				.build();
 	}
 	return connection;

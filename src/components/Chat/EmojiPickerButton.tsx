@@ -21,8 +21,6 @@ const EmojiPickerButton = ({
     const ref = useRef(null);
 
     const handleClickOutside = () => {
-        // Your custom logic here
-        console.log("clicked outside");
         dismissPicker();
       };
     useOnClickOutside(ref, handleClickOutside);
