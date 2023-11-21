@@ -22,7 +22,8 @@ const Video = ({user, defaultMuteValue} : {user:string, defaultMuteValue:boolean
     
     useEffect(() => {
         const video = videoRef.current;
-    
+        const preventPlayPauseOnClick = (event: { preventDefault: () => any; }) => event.preventDefault();
+
         const handleVolumeChange = () => {
             if (video) {
                 setVolume(video.volume);
@@ -32,11 +33,13 @@ const Video = ({user, defaultMuteValue} : {user:string, defaultMuteValue:boolean
         if (video) {
             video.muted = isMuted;
             video.addEventListener('volumechange', handleVolumeChange);
+            video.addEventListener('click', preventPlayPauseOnClick);
         }
     
         return () => {
             if (video) {
                 video.removeEventListener('volumechange', handleVolumeChange);
+                video.removeEventListener('click', preventPlayPauseOnClick);
             }
         };
     });
