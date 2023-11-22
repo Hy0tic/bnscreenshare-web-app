@@ -5,6 +5,8 @@ import { TextInput, Button, Box } from '@mantine/core';
 import WebRTCContext from "./WebRTC/WebRTCContext";
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import TvOutlinedIcon from '@mui/icons-material/TvOutlined';
+import ChatIcon from '@mui/icons-material/Chat';
+import CommentsDisabledIcon from '@mui/icons-material/CommentsDisabled';
 import { useForm } from '@mantine/form';
 import Chat from "./Chat/Chat";
 
@@ -12,6 +14,7 @@ const Interface = () => {
     const [lobbyId, setLobbyId] = useState("");
     const [isHost, setIsHost] = useState(false);
     const [userName, setUsername] = useState<string>("");
+    const [chatEnabled, setChatEnable] = useState<boolean>(false);
 
     const connection = useContext(SignalRContext);
     const webrtc = useContext(WebRTCContext);
@@ -76,6 +79,10 @@ const Interface = () => {
           console.error('Failed to copy text: ', err);
         }
       };
+    
+    const toggleChat = async () => {
+        setChatEnable(!chatEnabled);
+    }
 
     useEffect(() => {
         connection?.start()
@@ -110,11 +117,14 @@ const Interface = () => {
                                 :
                                     ""
                             }
+                            <Button variant="outline" color="gray" onClick={toggleChat}>
+                                {chatEnabled ? <CommentsDisabledIcon/> : <ChatIcon/>}
+                            </Button>
                             <Button variant="outline" color="gray" onClick={leaveLobby}><LogoutOutlinedIcon/></Button>
                         </div>
                         <div className="flex flex-row items-start">
                             <Video user={"1"} defaultMuteValue={isHost ? true : false}/>
-                            <Chat Username={userName} LobbyId={lobbyId}/>
+                            <Chat Username={userName} LobbyId={lobbyId} isEnabled={chatEnabled}/>
                         </div>
                     </div>)
                     : 
@@ -157,12 +167,9 @@ const Interface = () => {
                                                                     />
                                     </div>
 
-                                    {/* <Group position="right" mt="md"> */}
                                     <div className="px-8 m-3 justify-center items-center flex flex-row">
-                                        {/* <Button variant="outline" color="gray" onClick={createLobby}>Create Lobby</Button> */}
                                         <Button variant="outline" color="gray" type="submit">Join Lobby</Button>
                                     </div>
-                                    {/* </Group> */}
                                 </form>
                             </div>
 
