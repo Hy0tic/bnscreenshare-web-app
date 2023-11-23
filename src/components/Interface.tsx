@@ -14,7 +14,7 @@ const Interface = () => {
     const [lobbyId, setLobbyId] = useState("");
     const [isHost, setIsHost] = useState(false);
     const [userName, setUsername] = useState<string>("");
-    const [chatEnabled, setChatEnable] = useState<boolean>(false);
+    const [chatEnabled, setChatEnable] = useState<boolean>(true);
 
     const connection = useContext(SignalRContext);
     const webrtc = useContext(WebRTCContext);
@@ -128,8 +128,8 @@ const Interface = () => {
                         </div>
                     </div>)
                     : 
-                    (<>
-                    <div className="bg-slate-700 rounded-lg w-2/4 h-3/6 left-1/4 right-1/4 absolute flex items-center justify-between mt-20">
+                    
+                    (<div className="bg-slate-700 rounded-lg w-2/4 h-3/6 left-1/4 right-1/4 absolute flex items-center justify-between mt-20">
                         <div className="Info text-xl m-10">
                             <h1 className="font-bold text-5xl drop-shadow-2xl">
                                 No Hassle <br/>Screen Sharing
@@ -179,8 +179,7 @@ const Interface = () => {
                                     </div>
                             </div>
                         </Box>
-                    </div>
-                    </>)
+                    </div>)
                 }
             </div>
         </>
