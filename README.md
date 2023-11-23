@@ -1,34 +1,27 @@
-# bn-screenshare web app
-[![CodeFactor](https://www.codefactor.io/repository/github/hy0tic/bnscreenshare-web-app/badge)](https://www.codefactor.io/repository/github/hy0tic/bnscreenshare-web-app)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Hy0tic_bnscreenshare-web-app&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Hy0tic_bnscreenshare-web-app)
-[![Build and deploy](https://github.com/Hy0tic/bnscreenshare-web-app/actions/workflows/azure-static-web-apps-thankful-bush-0e0949c0f.yml/badge.svg)](https://github.com//Hy0tic/bnscreenshare-web-app/actions/workflows/azure-static-web-apps-thankful-bush-0e0949c0f.yml) 
+# React + TypeScript + Vite
 
-A simple and convenient way to screenshare through browser
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-[Vultr URL](https://bnscreenshare.bnlabsolutions.net/)
-[Azure URL](https://thankful-bush-0e0949c0f.3.azurestaticapps.net/)
+Currently, two official plugins are available:
 
-[Trello Board](https://trello.com/b/1A3sIg41/bnscreenshare)
-# Run Locally
-Prerequisites:
-* Have [Node.JS](https://nodejs.org/en) installed (version 16 or later will work)
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-Install and Run:
-* clone the repository `git clone https://github.com/Hy0tic/bnscreenshare-web-app.git`
-* run `npm install` to install dependencies
-* run `npm run dev` to run locally
+## Expanding the ESLint configuration
 
-# Feature
-* 1080p@60FPS streaming
-* No login required
-* Includes chat system in lobby
-* Free
-\
-\
- **Note**: 
-* Due to browser limitations, sharing a window's audio isn't possible, however, with Google Chrome, sharing a tab's audio or system audio is possible
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-# Technologies
-* React
-* Vite
-* MantineUI
+- Configure the top-level `parserOptions` property like this:
+
+```js
+   parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json', './tsconfig.node.json'],
+    tsconfigRootDir: __dirname,
+   },
+```
+
+- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
+- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list

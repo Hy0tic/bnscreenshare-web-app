@@ -1,89 +1,232 @@
-import { useContext, useEffect, useState } from "react";
+import { SetStateAction, useContext, useEffect, useState } from "react";
 import Video from "./Video";
 import SignalRContext from "./SignalR/SignalRContext";
-import { TextInput, Button, Box } from '@mantine/core';
-import WebRTCContext from "./WebRTC/WebRTCContext";
-import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import TvOutlinedIcon from '@mui/icons-material/TvOutlined';
-import ChatIcon from '@mui/icons-material/Chat';
-import CommentsDisabledIcon from '@mui/icons-material/CommentsDisabled';
-import { useForm } from '@mantine/form';
-import Chat from "./Chat/Chat";
+import { Button } from '@mantine/core';
+
+let localStream : MediaStream;
+let remoteStream : MediaStream;
+let peerConnection : RTCPeerConnection;
+let streamSetting = {
+    video: {
+        width: { ideal: 1920, max: 1920 },
+        height: { ideal: 1080, max: 1080 },
+        frameRate: { ideal: 60, max: 60 }
+    }, 
+    audio: {
+        autoGainControl: false,
+        channelCount: 2,
+        echoCancellation: false,
+        noiseSuppression: false,
+        sampleRate: 48000,
+        sampleSize: 16
+}};
+
+const servers = {
+    iceServers: [
+        {
+            urls: ["stun:stun4.l.google.com:19302", "stun:stun3.l.google.com:19302"]
+        }
+    ]
+}
 
 const Interface = () => {
     const [lobbyId, setLobbyId] = useState("");
-    const [isHost, setIsHost] = useState(false);
-    const [userName, setUsername] = useState<string>("");
-    const [chatEnabled, setChatEnable] = useState<boolean>(true);
+    const [value, setValue] = useState("");
+    const [janusOfferSDP, setJanusOfferSDP] = useState("");
+    const [sessionId, setSessionId] = useState("");
+    const [pluginId, setPluginId] = useState("");
 
     const connection = useContext(SignalRContext);
-    const webrtc = useContext(WebRTCContext);
-    const form = useForm({
-        initialValues: {
-            lobbyId: '',
-            username: ''
-          },
-          validate: {
-            lobbyId: (value) => (/^.{3,}$/.test(value) ? null : 'Invalid Id'),
-            username: (value) => (/^.{1,}$/.test(value) ? null : 'username cant be empty')
-          },
-      });
-
-    const handleJoinedGroup = (lobbyId:string) => {
+    const handleChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+        setValue(event.target.value);
+    }
+    const handleJoinedGroup = async (lobbyId:string) => {
         console.log("LobbyId: ", lobbyId);
         setLobbyId(lobbyId);
     }
-    
-    const handleMemberJoined = (uid: string) =>{
+    const handleMemberJoined = async (uid: string) =>{
         console.log("A new user joined: ", uid);
-        webrtc?.createOffer(uid, connection);
+        createOffer(uid);
     }
-    const handleJoinLobby = ({ lobbyId, username } : { lobbyId:string, username:string }) => {
-        console.log("lobbyId");
-        connection?.invoke("JoinLobby", lobbyId);
-        setIsHost(false);
-        setUsername(username);
+    const handleJoinLobby = async () => {
+        connection?.invoke("JoinLobby", value);
     }
     const handleReceiveOffer = async (offer:string, uid:string) => {
         const message = JSON.parse(offer);
         if(message.type === "offer"){
-            webrtc?.createAnswer(uid, message.offer, connection);
+            createAnswer(uid, message.offer);
         }
         if(message.type === "answer"){
-            webrtc?.addAnswer(message.answer);
+            addAnswer(message.answer);
         }
         if(message.type === "candidate"){
-            const pc = await webrtc?.getPeerConnection();
-            if(pc){
-                pc.addIceCandidate(message.candidate);
+            if(peerConnection){
+                peerConnection.addIceCandidate(message.candidate);
             }
         }
     }
-    
-    const createLobby = () => {
-        connection?.invoke("CreateLobby");
-        setIsHost(true);
-        setUsername("host");
+    const handleUserLeft = async (value:string) =>{
+        console.log(value);
     }
+    let createPeerConnection = async (uid:string) => {
+        peerConnection = new RTCPeerConnection(servers);
+        remoteStream = new MediaStream();
     
-    const leaveLobby = () =>{
+        if(!localStream){
+            localStream = await navigator.mediaDevices.getDisplayMedia(streamSetting)
+        }
+
+        localStream.getTracks().forEach((track: MediaStreamTrack) => {
+            peerConnection.addTrack(track, localStream)
+        })
+    
+        peerConnection.ontrack = (event) => {
+            event.streams[0].getTracks().forEach((track)=>
+            {
+                remoteStream.addTrack(track);
+            })
+        }
+    
+        peerConnection.onicecandidate = async (event) => {
+            if(event.candidate)
+            {
+                connection?.invoke("SendOffer", JSON.stringify({'type': 'candidate', 'candidate': event.candidate}), uid);
+            }
+        }
+    }
+    let createPeerConnectionAnswer = async (uid:string) => {
+        peerConnection = new RTCPeerConnection(servers);
+        remoteStream = new MediaStream();
+        let user2 = document.getElementById('user-1') as HTMLMediaElement;
+    
+        if(user2) {
+            user2.srcObject = remoteStream;
+        }
+    
+        peerConnection.ontrack = (event) => {
+            event.streams[0].getTracks().forEach((track)=>
+            {
+                remoteStream.addTrack(track);
+            })
+        }
+    
+        peerConnection.onicecandidate = async (event) => {
+            if(event.candidate)
+            {
+                connection?.invoke("SendOffer", JSON.stringify({'type': 'candidate', 'candidate': event.candidate}), uid);
+            }
+        }
+    }
+    let createOffer = async (uid:string) => {
+        console.log("CREATING OFFER");
+        console.log(uid);
+        await createPeerConnection(uid);
+        let offer = await peerConnection.createOffer();
+        console.log(offer);
+        await peerConnection.setLocalDescription(offer);
+        const text = JSON.stringify({'type': 'offer', 'offer': offer});
+        connection?.invoke("SendOffer", text, uid);
+    }
+    let createAnswer = async (uid:string, offer: RTCSessionDescriptionInit) => {
+        console.log(uid);
+        console.log(offer);
+        await createPeerConnectionAnswer(uid);
+        await peerConnection.setRemoteDescription(offer);
+        let answer = await peerConnection.createAnswer();
+        await peerConnection.setLocalDescription(answer);
+        connection?.invoke("SendOffer", JSON.stringify({'type': 'answer', 'answer': answer}), uid);
+    }
+    let addAnswer = async (answer: RTCSessionDescriptionInit) => {
+        if(!peerConnection.currentRemoteDescription){
+            peerConnection.setRemoteDescription(answer)
+        }
+    }
+    let createLobby = async () => {
+        connection?.invoke("CreateLobby");
+    }
+    let leaveLobby = async () =>{
         connection?.invoke("LeaveLobby", lobbyId);
-        webrtc?.endStream();
         setLobbyId("");
     }
-
-    const handleCopy = async () => {
-        try {
-          await navigator.clipboard.writeText(lobbyId);
-        } catch (err) {
-          console.error('Failed to copy text: ', err);
+    let toggleStream = async() => {
+        let videoTrack;
+        try{
+            videoTrack = localStream.getTracks().find(track => track.kind === 'video');
         }
-      };
-    
-    const toggleChat = async () => {
-        setChatEnable(!chatEnabled);
+        catch{
+            localStream = await navigator.mediaDevices.getDisplayMedia(streamSetting);
+            let user1 = document.getElementById('user-1') as HTMLMediaElement;
+            if(user1) {
+                user1.srcObject = localStream;
+            }
+        }
+
+        if(videoTrack){
+            console.log(videoTrack);
+            videoTrack.enabled = !videoTrack.enabled;
+        }
+    }
+    let toggleAudio = async() => {
+        let audioTrack = localStream.getTracks().find(track => track.kind === 'audio');
+        if(audioTrack){
+            console.log(audioTrack);
+            audioTrack.enabled = !audioTrack.enabled;
+        }
     }
 
+    const handleReceiveSessionId = async (value:string) =>{
+        console.log(value);
+        setSessionId(value);
+    }
+    const handleReceivePluginId = async (value:string) =>{
+        console.log(value);
+        setPluginId(value);
+    }
+    const createJanusOfferAndSend = async () => {
+      if (!peerConnection) {
+        connection?.on("ReceiveSessionId", handleReceiveSessionId)
+        connection?.on("ReceivePluginId", handleReceivePluginId)
+        connection?.invoke("InitializeJanusSession");
+        peerConnection = new RTCPeerConnection(servers);
+    
+        peerConnection.onicecandidate = async (event) => {
+            if(event.candidate)
+            {
+                connection?.invoke("SendICECandidateAsync", event.candidate);
+            }
+        }
+      }
+    
+      if (!localStream) {
+        try {
+          localStream = await navigator.mediaDevices.getDisplayMedia(streamSetting);
+        } catch (err) {
+          console.error("Error getting display media:", err);
+          return;
+        }
+    
+        localStream.getTracks().forEach((track) => {
+          peerConnection.addTrack(track, localStream);
+        });
+      }
+    
+      try {
+        const offer = await peerConnection.createOffer();
+        await peerConnection.setLocalDescription(offer);
+    
+        if (offer.sdp) {
+          setJanusOfferSDP(offer.sdp);
+          console.log(offer);
+          // Send the offer to Janus once all ICE candidates are gathered
+        }
+      } catch (err) {
+        console.error("Error creating offer:", err);
+      }
+    };
+    
+
+    
+    
     useEffect(() => {
         connection?.start()
           .then(() => {
@@ -91,96 +234,32 @@ const Interface = () => {
             connection.on("JoinedGroup", handleJoinedGroup);
             connection.on("MemberJoined", handleMemberJoined);
             connection.on("ReceivingOffer", handleReceiveOffer);
+            connection.on("CallerLeft", handleUserLeft);
           })
           .catch((e) => console.log("Connection failed: ", e));
+
+        createJanusOfferAndSend()
         }, [])
     window.addEventListener('beforeunload', leaveLobby);
     
     return (
         <>
-            <div className="home-page-panel text-white p-3">
+            <div className="ControlPanel text-white p-3">
                 {lobbyId ? 
-                    (<div className="LobbyUI">
-                        <div className="LobbyControl flex my-2">
-                            <p className="ml-3 mt-1 font-bold text-slate-500">Lobby ID:</p>
-                            <p className="mt-1 ml-1 mr-3">{lobbyId}</p>
-                            
-                            <p className="ml-3 mt-1 font-bold text-slate-500">Username:</p>
-                            <p className="mt-1 ml-1 mr-3">{userName}</p>
-                            <Button variant="outline" color="gray" onClick={handleCopy}>
-                                Copy Lobby ID
-                            </Button>
-                            {isHost ? 
-                                <>
-                                    <Button variant="outline" color="gray" onClick={() => webrtc?.toggleStream(lobbyId, connection)}><TvOutlinedIcon/></Button>
-                                </>
-                                :
-                                    ""
-                            }
-                            <Button variant="outline" color="gray" onClick={toggleChat}>
-                                {chatEnabled ? <CommentsDisabledIcon/> : <ChatIcon/>}
-                            </Button>
-                            <Button variant="outline" color="gray" onClick={leaveLobby}><LogoutOutlinedIcon/></Button>
-                        </div>
-                        <div className="flex flex-row items-start">
-                            <Video user={"1"} defaultMuteValue={isHost ? true : false}/>
-                            <Chat Username={userName} LobbyId={lobbyId} isEnabled={chatEnabled}/>
-                        </div>
+                    (<div>
+                        <Video user={"1"}/>
+                        <Button variant="outline" color="gray" onClick={leaveLobby}>Leave Lobby</Button>
+                        <Button variant="outline" color="gray" onClick={toggleStream}>Toggle Stream</Button>
+                        <Button variant="outline" color="gray" onClick={toggleAudio}>Toggle Audio</Button>
                     </div>)
                     : 
-                    
-                    (<div className="bg-slate-700 rounded-lg w-2/4 h-3/6 left-1/4 right-1/4 absolute flex items-center justify-between mt-20">
-                        <div className="Info text-xl m-10">
-                            <h1 className="font-bold text-5xl drop-shadow-2xl">
-                                No Hassle <br/>Screen Sharing
-                            </h1>
-                            <br/>
-                                <ul>
-                                    <li className="flex flex-row"><img className="h-5 mr-2" src="https://bucket.bn-chat.net/bnft.svg"/>Up to 1080p 60fps</li>
-                                    <li className="flex flex-row"><img className="h-5 mr-2" src="https://bucket.bn-chat.net/bnft.svg"/>Includes lobby chat system</li>
-                                    <li className="flex flex-row"><img className="h-5 mr-2" src="https://bucket.bn-chat.net/bnft.svg"/>No login necessary</li>
-                                </ul>
-                                <div className="text-sm pt-2">
-                                warning: if you can't see the stream, you may need to enable WebRTC in your browser
-                                </div>
-                        </div>
-                        <Box className=" bg-gray-800 rounded-lg w-1/3 h-4/6 relative drop-shadow-lg m-10 mt-0 mb-0">
-                            <div className="Join-Lobby border-b-2 border-slate-700">
-                                <form onSubmit={form.onSubmit((input) => handleJoinLobby(input))}>
-                                    <div className="mx-3">
-                                        <div className="text-md font-semibold text-gray-500 p-1">Lobby Id</div>
-                                        <TextInput
-                                            placeholder="23a4e"
-                                            radius="md"
-                                            size="md"
-                                            {...form.getInputProps('lobbyId')}
-                                        />
-                                    </div>
-
-                                    <div className="mx-3">
-                                        <div className="text-md font-semibold text-gray-500 p-1">Username</div>
-                                                                    <TextInput
-                                                                    placeholder="Varvalian"
-                                                                    radius="md"
-                                                                    size="md"
-                                                                    {...form.getInputProps('username')}
-                                                                    />
-                                    </div>
-
-                                    <div className="px-8 m-3 justify-center items-center flex flex-row">
-                                        <Button variant="outline" color="gray" type="submit">Join Lobby</Button>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <div className="Host-Lobby h-1/3">
-                                    <div className="m-3 mt-8 justify-center items-center flex flex-row">
-                                        <Button variant="outline" color="gray" onClick={createLobby}>Host Lobby</Button>
-                                    </div>
-                            </div>
-                        </Box>
+                    (<div className="bg-transparent">
+                        <Button variant="outline" color="gray" onClick={createLobby}>Create Lobby</Button>
+                        <Button variant="outline" color="gray" onClick={handleJoinLobby}>Join Lobby</Button>
+                        <input type="text" placeholder="LobbyId" className="bg-white text-black m-1" value={value} onChange={handleChange}/>
                     </div>)
                 }
+                <p className="ControlPanel m-5">Lobby ID: {lobbyId}</p>
             </div>
         </>
     );
