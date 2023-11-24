@@ -18,7 +18,7 @@ const LobbyUI = ({
         toggleChat,
         leaveLobby
     }
-    : 
+        : 
     {
         lobbyId:string,
         userName:string,
