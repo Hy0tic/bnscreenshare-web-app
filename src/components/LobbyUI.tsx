@@ -44,9 +44,7 @@ const LobbyUI = ({
                     Copy Lobby ID
                 </Button>
                 {isHost ? 
-                    <>
                         <Button variant="outline" color="gray" onClick={() => webrtc?.toggleStream(lobbyId, connection)}><TvOutlinedIcon/></Button>
-                    </>
                     :
                         ""
                 }

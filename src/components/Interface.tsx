@@ -118,8 +118,10 @@ const StyledHomePageContainer = styled.div`
     background-color: rgb(51 65 85 / var(--tw-bg-opacity));
 
     border-radius: 0.5rem/* 8px */;
-    width: 50%;
-    height: 50%;
+
+    width: 1000px;
+    height: 500px;
+
     left: 25%;
     right: 25%;
 
