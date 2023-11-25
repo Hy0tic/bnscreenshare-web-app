@@ -19,6 +19,14 @@ const Video = ({user, defaultMuteValue} : {user:string, defaultMuteValue:boolean
     }
 
     const videoRef = useRef<HTMLVideoElement | null>(null);
+
+    const handleKeyPress = (event: KeyboardEvent) => {
+        if (event.key === 'ArrowUp') {
+            setVolume((prevVolume) => Math.min(prevVolume + 0.05, 1));
+        } else if (event.key === 'ArrowDown') {
+            setVolume((prevVolume) => Math.max(prevVolume - 0.05, 0));
+        }
+    };
     
     useEffect(() => {
         const video = videoRef.current;
@@ -29,7 +37,9 @@ const Video = ({user, defaultMuteValue} : {user:string, defaultMuteValue:boolean
                 setVolume(video.volume);
             }
         };
-    
+
+        window.addEventListener('keydown', handleKeyPress);
+
         if (video) {
             video.muted = isMuted;
             video.addEventListener('volumechange', handleVolumeChange);
@@ -41,6 +51,7 @@ const Video = ({user, defaultMuteValue} : {user:string, defaultMuteValue:boolean
                 video.removeEventListener('volumechange', handleVolumeChange);
                 video.removeEventListener('click', preventPlayPauseOnClick);
             }
+            window.removeEventListener('keydown', handleKeyPress);
         };
     });
     
