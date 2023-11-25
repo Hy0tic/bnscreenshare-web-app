@@ -22,11 +22,19 @@ const Video = ({user, defaultMuteValue} : {user:string, defaultMuteValue:boolean
 
     const handleKeyPress = (event: KeyboardEvent) => {
         if (event.key === 'ArrowUp') {
-            setVolume((prevVolume) => Math.min(prevVolume + 0.05, 1));
+            changeVolumeThroughArrowKeys(Math.min(volume + 0.05, 1));
         } else if (event.key === 'ArrowDown') {
-            setVolume((prevVolume) => Math.max(prevVolume - 0.05, 0));
+            changeVolumeThroughArrowKeys(Math.max(volume - 0.05, 0));
         }
     };
+
+    const changeVolumeThroughArrowKeys = (v:number) => {
+        const video = videoRef.current;
+        if (video) {
+            video.volume = v;
+        }
+        setVolume(v);
+    }
     
     useEffect(() => {
         const video = videoRef.current;
