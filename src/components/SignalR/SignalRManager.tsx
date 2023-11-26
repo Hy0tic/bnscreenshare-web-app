@@ -11,7 +11,25 @@ export const getConnection = () => {
 					skipNegotiation: true,
 					transport: signalR.HttpTransportType.WebSockets,
 				})
-				.withAutomaticReconnect([0, 1000, 5000, 10000])
+			.withAutomaticReconnect({
+				nextRetryDelayInMilliseconds: retryContext => {
+					// You can add your own logic here. For example:
+					// - Increase the delay with each retry
+					// - Cap the maximum delay to a certain value
+					// - Return null or a fixed value to keep trying indefinitely
+					if (retryContext.elapsedMilliseconds < 60000) {
+						// If less than 60 seconds have elapsed, retry every 10 seconds
+						console.log("retrying signalR connection");
+						return 1000;
+					} else {
+						// After 60 seconds, retry every 3 seconds
+						console.log("retrying signalR connection");
+						return 3000;
+					}
+
+					// Note: Returning null would stop the retry process.
+				}
+			})
 				.build();
 	}
 	return connection;
