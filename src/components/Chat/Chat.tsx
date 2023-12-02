@@ -28,7 +28,7 @@ const Chat = ({Username, LobbyId, isEnabled} : {Username: string, LobbyId : stri
             connection?.invoke("SendMessage", username, content, LobbyId);
         }
        // Scroll to bottom
-       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 
     };
 
@@ -51,14 +51,14 @@ const Chat = ({Username, LobbyId, isEnabled} : {Username: string, LobbyId : stri
 
     return (<>
         {isEnabled ? 
-            <div className="flex-col relative ml-3 h-75vh w-1/5 bg-gray-900 rounded-md overflow-hidden">
-                <div className="messages h-5/6 w-full flex-1 p-10 overflow-scroll break-words no-scrollbar text-slate-300">
+            <div className="flex-col relative ml-3 h-73vh w-1/5 bg-gray-900 rounded-md overflow-hidden">
+                <div className="messages h-full w-full flex-1 p-10 overflow-scroll break-words no-scrollbar text-slate-300">
                     {messages.map((message: { username: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; content: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; }, index: Key | null | undefined) => (
                         <div key={index} className="message mb-1 text-xl">
                             <strong>{message.username}:</strong> {message.content}
                         </div>
                     ))}
-                    <div className="h-1/5" ref={messagesEndRef}></div>
+                    <div className="h-4 m-3" ref={messagesEndRef}></div>
                 </div>
 
                 <form onSubmit={sendMessage} className="InputArea border-2 border-gray-700 bg-gray-900 absolute bottom-0 w-full h-auto">
