@@ -1,4 +1,4 @@
-name: Build and upload
+name: Build and upload image to docker and deploy
 
 on:
   push:
@@ -14,7 +14,7 @@ on:
     
 
 jobs:
-  build-and-upload:
+  build-and-deploy:
     environment:
       name: 'Production'
     runs-on: ubuntu-latest
