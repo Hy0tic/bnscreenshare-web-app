@@ -6,6 +6,7 @@ import CommentsDisabledIcon from '@mui/icons-material/CommentsDisabled';
 import TvOutlinedIcon from '@mui/icons-material/TvOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { HubConnection } from "@microsoft/signalr";
+import styled from 'styled-components';
 
 const LobbyUI = ({ 
         lobbyId,
@@ -34,12 +35,12 @@ const LobbyUI = ({
 
     return (
         <div className="LobbyUI">
-            <div className="LobbyControl flex my-2">
-                <p className="ml-3 mt-1 font-bold text-slate-500">Lobby ID:</p>
-                <p className="mt-1 ml-1 mr-3">{lobbyId}</p>
+            <StyledLobbyControl>
+                <StyledText>Lobby ID:</StyledText>
+                <StyledValue>{lobbyId}</StyledValue>
                 
-                <p className="ml-3 mt-1 font-bold text-slate-500">Username:</p>
-                <p className="mt-1 ml-1 mr-3">{userName}</p>
+                <StyledText>Username:</StyledText>
+                <StyledValue>{userName}</StyledValue>
                 <Button variant="outline" color="gray" onClick={handleCopy}>
                     Copy Lobby ID
                 </Button>
@@ -52,7 +53,8 @@ const LobbyUI = ({
                     {chatEnabled ? <CommentsDisabledIcon/> : <ChatIcon/>}
                 </Button>
                 <Button variant="outline" color="gray" onClick={leaveLobby}><LogoutOutlinedIcon/></Button>
-            </div>
+            </StyledLobbyControl>
+
             <div className="flex flex-row items-start">
                 <Video user={"1"} defaultMuteValue={isHost ? true : false}/>
                 <Chat Username={userName} LobbyId={lobbyId} isEnabled={chatEnabled}/>
@@ -63,3 +65,25 @@ const LobbyUI = ({
 }
 
 export default LobbyUI;
+
+const StyledLobbyControl = styled.div`
+    display: flex;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+`
+
+const StyledText = styled.p`
+    margin-left: 0.75rem;
+    margin-top: 0.25rem;
+    font-weight: 700;
+    --tw-text-opacity: 1;
+    color: rgb(100 116 139 / var(--tw-text-opacity));
+
+`
+
+const StyledValue = styled.p`
+    margin-top: 0.25rem;
+    margin-left: 0.25rem;
+    margin-right: 0.75rem;
+`
+

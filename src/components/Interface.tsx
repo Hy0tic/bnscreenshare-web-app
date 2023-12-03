@@ -1,10 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import SignalRContext from "./SignalR/SignalRContext";
 import WebRTCContext from "./WebRTC/WebRTCContext";
-import InfoContainer from "./HomePage/InfoContainer";
-import styled from 'styled-components';
 import LobbyUI from "./LobbyUI";
-import LobbyForm from "./HomePage/LobbyForm";
+import HomePage from "./HomePage/HomePage";
 
 
 const Interface = () => {
@@ -100,38 +98,14 @@ const Interface = () => {
                     />)
                     : 
                     
-                    (<StyledHomePageContainer>
-                        <InfoContainer/>
-                        <LobbyForm 
-                            handleJoinLobby={handleJoinLobby}
-                            createLobby={createLobby}
-                        />
-                    </StyledHomePageContainer>)
+                    <HomePage
+                        handleJoinLobby={handleJoinLobby}
+                        createLobby={createLobby}
+                    />
                 }
             </div>
         </>
     );
 };
-
-const StyledHomePageContainer = styled.div`
-    --tw-bg-opacity: 1;
-    background-color: rgb(51 65 85 / var(--tw-bg-opacity));
-
-    border-radius: 0.5rem/* 8px */;
-
-    width: 1000px;
-    height: 500px;
-
-    left: 25%;
-    right: 25%;
-
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    margin-top: 5rem/* 80px */;
-`
-
 
 export default Interface;
