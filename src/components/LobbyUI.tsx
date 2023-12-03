@@ -15,6 +15,7 @@ const LobbyUI = ({
         chatEnabled,
         connection,
         webrtc,
+        usernameColors,
         handleCopy,
         toggleChat,
         leaveLobby
@@ -27,6 +28,7 @@ const LobbyUI = ({
         chatEnabled:boolean, 
         connection: HubConnection | null,
         webrtc: any,
+        usernameColors : number[],
         handleCopy: () => void,
         toggleChat: () => void,
         leaveLobby: () => void
@@ -57,7 +59,7 @@ const LobbyUI = ({
 
             <div className="flex flex-row items-start">
                 <Video user={"1"} defaultMuteValue={isHost ? true : false}/>
-                <Chat Username={userName} LobbyId={lobbyId} isEnabled={chatEnabled}/>
+                <Chat Username={userName} LobbyId={lobbyId} isEnabled={chatEnabled} usernameColors={usernameColors}/>
             </div>
         </div>
 

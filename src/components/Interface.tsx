@@ -9,6 +9,7 @@ const Interface = () => {
     const [lobbyId, setLobbyId] = useState("");
     const [isHost, setIsHost] = useState(false);
     const [userName, setUsername] = useState<string>("");
+    const [usernameColors, setUsernameColors] = useState([90,90,90]);
     const [chatEnabled, setChatEnable] = useState<boolean>(true);
 
     const connection = useContext(SignalRContext);
@@ -69,6 +70,10 @@ const Interface = () => {
         setChatEnable(!chatEnabled);
     }
 
+    const getRandomNumber = () => {
+        return Math.floor(Math.random() * 256);
+    }
+
     useEffect(() => {
         connection?.start()
           .then(() => {
@@ -78,6 +83,8 @@ const Interface = () => {
             connection.on("ReceivingOffer", handleReceiveOffer);
           })
           .catch((e) => console.log("Connection failed: ", e));
+
+        setUsernameColors([getRandomNumber() ,getRandomNumber() ,getRandomNumber() ])
         }, [])
     window.addEventListener('beforeunload', leaveLobby);
     
@@ -90,7 +97,8 @@ const Interface = () => {
                         userName={userName} 
                         isHost={isHost} 
                         chatEnabled={chatEnabled} 
-                        connection={connection} 
+                        connection={connection}
+                        usernameColors={usernameColors} 
                         webrtc={webrtc}                     
                         toggleChat={toggleChat}
                         leaveLobby={leaveLobby}
