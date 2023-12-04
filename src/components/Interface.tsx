@@ -3,6 +3,7 @@ import SignalRContext from "./SignalR/SignalRContext";
 import WebRTCContext from "./WebRTC/WebRTCContext";
 import LobbyUI from "./LobbyUI";
 import HomePage from "./HomePage/HomePage";
+import styled from "styled-components";
 
 
 const Interface = () => {
@@ -24,6 +25,7 @@ const Interface = () => {
         console.log("A new user joined: ", uid);
         webrtc?.createOffer(uid, connection);
     }
+    
     const handleJoinLobby = ({ lobbyId, username } : { lobbyId:string, username:string }) => {
         console.log("lobbyId");
         connection?.invoke("JoinLobby", lobbyId);
@@ -84,13 +86,13 @@ const Interface = () => {
           })
           .catch((e) => console.log("Connection failed: ", e));
 
-        setUsernameColors([getRandomNumber() ,getRandomNumber() ,getRandomNumber() ])
+        setUsernameColors([getRandomNumber(), getRandomNumber(), getRandomNumber()])
         }, [])
     window.addEventListener('beforeunload', leaveLobby);
     
     return (
         <>
-            <div className="home-page-panel text-white p-3">
+            <StyledContainer>
                 {lobbyId ? 
                     (<LobbyUI 
                         lobbyId={lobbyId}
@@ -111,9 +113,15 @@ const Interface = () => {
                         createLobby={createLobby}
                     />
                 }
-            </div>
+            </StyledContainer>
         </>
     );
 };
 
 export default Interface;
+
+const StyledContainer = styled.div`
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity));
+    padding: 0.75rem;
+`
