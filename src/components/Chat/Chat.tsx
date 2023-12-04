@@ -1,6 +1,7 @@
-import { Key, useContext, useEffect, useRef, useState } from "react";
+import { FormEventHandler, Key, KeyboardEvent, useContext, useEffect, useRef, useState } from "react";
 import SignalRContext from "../SignalR/SignalRContext";
 import EmojiPickerButton from "./EmojiPickerButton";
+import styled from "styled-components";
 
 type Message = 
 {
@@ -59,21 +60,32 @@ const Chat = ({Username,
         connection?.invoke("SendMessage", "Notification", `${value}`, LobbyId, usernameColors);
     }
 
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            sendMessage(event);
+        }
+    };
+
     return (<>
         {isEnabled ? 
-            <div className="flex-col relative ml-3 h-73vh w-1/5 bg-gray-900 rounded-md overflow-hidden">
-                <div className="messages h-full w-full flex-1 p-10 overflow-scroll break-words no-scrollbar text-slate-300">
+            <StyledChatContainer>
+                <StyledMessagesContainer>
                     {messages.map((message: Message, index: Key | null | undefined) => (
                         <div key={index} className="message mb-1 text-xl">
                             <strong style={{ color: `rgb(${message.usernameColors[0]}, ${message.usernameColors[1]}, ${message.usernameColors[2]})` }}>{message.username}:</strong> {message.content}
                         </div>
                     ))}
                     <div className="h-4 m-3" ref={messagesEndRef}></div>
-                </div>
+                </StyledMessagesContainer>
 
                 <form onSubmit={sendMessage} className="InputArea border-2 border-gray-700 bg-gray-900 absolute bottom-0 w-full h-auto">
                     <div className="relative flex flex-row">
-                            <input maxLength={130} className="bg-gray-950 ml-1 w-full overflow-scroll" value={content} onChange={(e) => setContent(e.target.value)} placeholder="type a message" />
+                            <textarea maxLength={130} className="bg-gray-950 ml-1 w-full overflow-auto no-scrollbar"
+                                value={content}
+                                onChange={(e) => setContent(e.target.value)} 
+                                placeholder="type a message"
+                                onKeyDown={handleKeyDown} />
                             <EmojiPickerButton
                                 onEmojiPick={(emoji) =>
                                     setContent((content) => content.concat(emoji))
@@ -82,7 +94,7 @@ const Chat = ({Username,
                     </div>
                 </form> 
         
-            </div>
+            </StyledChatContainer>
             :
             ""
         }
@@ -91,3 +103,36 @@ const Chat = ({Username,
 }
 
 export default Chat;
+
+const StyledChatContainer = styled.div`
+    flex-direction: column;
+    position: relative;
+    margin-left: 0.75rem;
+    height: 90vh;
+    width: 20%;
+    --tw-bg-opacity: 1;
+    background-color: rgb(17 24 39 / var(--tw-bg-opacity));
+    border-radius: 0.375rem;
+    overflow: hidden;
+    border-left: solid gray 1px;
+`
+
+const StyledMessagesContainer = styled.div`
+    height: 100%;
+    width: 100%;
+    flex: 1 1 0%;
+    padding: 2.5rem;
+    overflow: scroll;
+    overflow-y: hidden;
+    overflow-wrap: break-word;
+    --tw-text-opacity: 1;
+    color: rgb(203 213 225 / var(--tw-text-opacity));
+`
+
+const StyledTextArea = styled.div`
+    --tw-bg-opacity: 1;
+    background-color: rgb(3 7 18 / var(--tw-bg-opacity));
+    margin-left: 0.25rem;
+    width: 100%;
+    overflow: scroll;
+`
