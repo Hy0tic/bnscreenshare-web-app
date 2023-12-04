@@ -1,4 +1,4 @@
-import { FormEventHandler, Key, KeyboardEvent, useContext, useEffect, useRef, useState } from "react";
+import { Key, useContext, useEffect, useRef, useState } from "react";
 import SignalRContext from "../SignalR/SignalRContext";
 import EmojiPickerButton from "./EmojiPickerButton";
 import styled from "styled-components";
@@ -96,7 +96,7 @@ const Chat = ({Username,
         
             </StyledChatContainer>
             :
-            ""
+            <></>
         }
     </>
     )
@@ -115,7 +115,7 @@ const StyledChatContainer = styled.div`
     border-radius: 0.375rem;
     overflow: hidden;
     border-left: solid gray 1px;
-`
+`;
 
 const StyledMessagesContainer = styled.div`
     height: 100%;
@@ -127,12 +127,4 @@ const StyledMessagesContainer = styled.div`
     overflow-wrap: break-word;
     --tw-text-opacity: 1;
     color: rgb(203 213 225 / var(--tw-text-opacity));
-`
-
-const StyledTextArea = styled.div`
-    --tw-bg-opacity: 1;
-    background-color: rgb(3 7 18 / var(--tw-bg-opacity));
-    margin-left: 0.25rem;
-    width: 100%;
-    overflow: scroll;
-`
+`;
