@@ -117,11 +117,13 @@ const StyledVideo = styled.video`
     display: grid;
     gap: 2em;
     background-color: rgb(40, 40, 40, .5);
-    height: 80vh;
+    aspect-ratio: 16/9;
+    height: 90vh;
     overflow: hidden;
     border-style: solid;
     border-color: black;
     border-radius: 10px;
+    object-fit: contain;
 `
 
 export default Video;
