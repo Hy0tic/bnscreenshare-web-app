@@ -58,7 +58,7 @@ const LobbyUI = ({
             </StyledLobbyControl>
 
             <div className="flex flex-row items-start">
-                <Video user={"1"} defaultMuteValue={isHost ? true : false}/>
+                <Video user={"1"} defaultMuteValue={isHost}/>
                 <Chat Username={userName} LobbyId={lobbyId} isEnabled={chatEnabled} usernameColors={usernameColors}/>
             </div>
         </div>

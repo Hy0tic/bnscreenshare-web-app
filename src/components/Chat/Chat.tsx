@@ -21,7 +21,6 @@ const Chat = ({Username,
     isEnabled : boolean,
     usernameColors: number[]}) => {
     const [messages, setMessages] = useState<Message[]>([]);
-    const [username] = useState(Username);
     const [content, setContent] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const connection = useContext(SignalRContext);
@@ -34,9 +33,9 @@ const Chat = ({Username,
 
     const sendMessage = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-        if (username.trim() && content.trim()) {
+        if (Username.trim() && content.trim()) {
             setContent('');
-            connection?.invoke("SendMessage", username, content, LobbyId, usernameColors);
+            connection?.invoke("SendMessage", Username, content, LobbyId, usernameColors);
         }
        // Scroll to bottom
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

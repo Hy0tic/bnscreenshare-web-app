@@ -91,7 +91,6 @@ const Interface = () => {
     window.addEventListener('beforeunload', leaveLobby);
     
     return (
-        <>
             <StyledContainer>
                 {lobbyId ? 
                     (<LobbyUI 
@@ -114,7 +113,6 @@ const Interface = () => {
                     />
                 }
             </StyledContainer>
-        </>
     );
 };
 
