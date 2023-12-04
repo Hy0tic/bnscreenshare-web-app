@@ -10,9 +10,9 @@ const InfoContainer = () => {
             <br/>
 
             <ul>
-                <li className="flex flex-row"><img className="h-5 mr-2" src="https://bucket.bn-chat.net/bnft.svg"/>Up to 1080p 60fps</li>
-                <li className="flex flex-row"><img className="h-5 mr-2" src="https://bucket.bn-chat.net/bnft.svg"/>Includes lobby chat system</li>
-                <li className="flex flex-row"><img className="h-5 mr-2" src="https://bucket.bn-chat.net/bnft.svg"/>No login necessary</li>
+                <li className="flex flex-row"><img className="h-5 mr-2" src="https://bucket.bn-chat.net/bnft.svg" alt="bnlab-logo"/>Up to 1080p 60fps</li>
+                <li className="flex flex-row"><img className="h-5 mr-2" src="https://bucket.bn-chat.net/bnft.svg" alt="bnlab-logo"/>Includes lobby chat system</li>
+                <li className="flex flex-row"><img className="h-5 mr-2" src="https://bucket.bn-chat.net/bnft.svg" alt="bnlab-logo"/>No login necessary</li>
             </ul>
 
             <div className="text-sm pt-2">

@@ -8,7 +8,7 @@ const HomePage = ({handleJoinLobby,
       { handleJoinLobby: ({ lobbyId, username } : { lobbyId:string, username:string }) => void,
         createLobby: () => void
     }) => {
-    return (<>
+    return (
         <StyledHomePageContainer>
             <InfoContainer/>
             <LobbyForm 
@@ -16,7 +16,7 @@ const HomePage = ({handleJoinLobby,
                 createLobby={createLobby}
             />
         </StyledHomePageContainer>
-    </>)
+    )
 }
 
 export default HomePage;
