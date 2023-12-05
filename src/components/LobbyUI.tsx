@@ -43,24 +43,28 @@ const LobbyUI = ({
                 
                 <StyledText>Username:</StyledText>
                 <StyledValue>{userName}</StyledValue>
+
                 <Button variant="outline" color="gray" onClick={handleCopy}>
                     Copy Lobby ID
                 </Button>
+
                 {isHost ? 
                         <Button variant="outline" color="gray" onClick={() => webrtc?.toggleStream(lobbyId, connection)}><TvOutlinedIcon/></Button>
                     :
                         ""
                 }
+
                 <Button variant="outline" color="gray" onClick={toggleChat}>
                     {chatEnabled ? <CommentsDisabledIcon/> : <ChatIcon/>}
                 </Button>
+
                 <Button variant="outline" color="gray" onClick={leaveLobby}><LogoutOutlinedIcon/></Button>
             </StyledLobbyControl>
 
-            <div className="flex flex-row items-start">
+            <StyledChatAndVideoContainer>
                 <Video user={"1"} defaultMuteValue={isHost}/>
                 <Chat Username={userName} LobbyId={lobbyId} isEnabled={chatEnabled} usernameColors={usernameColors}/>
-            </div>
+            </StyledChatAndVideoContainer>
         </div>
 
     );
@@ -80,12 +84,17 @@ const StyledText = styled.p`
     font-weight: 700;
     --tw-text-opacity: 1;
     color: rgb(100 116 139 / var(--tw-text-opacity));
-
-`
+`;
 
 const StyledValue = styled.p`
     margin-top: 0.25rem;
     margin-left: 0.25rem;
     margin-right: 0.75rem;
-`
+`;
+
+const StyledChatAndVideoContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+`;
 

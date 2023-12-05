@@ -122,4 +122,4 @@ const StyledContainer = styled.div`
     --tw-text-opacity: 1;
     color: rgb(255 255 255 / var(--tw-text-opacity));
     padding: 0.75rem;
-`
+`;

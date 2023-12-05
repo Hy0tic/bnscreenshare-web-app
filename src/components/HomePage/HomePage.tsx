@@ -39,4 +39,4 @@ const StyledHomePageContainer = styled.div`
     justify-content: space-between;
 
     margin-top: 5rem/* 80px */;
-`
+`;

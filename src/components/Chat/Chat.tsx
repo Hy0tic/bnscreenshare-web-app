@@ -79,7 +79,7 @@ const Chat = ({Username,
                 </StyledMessagesContainer>
 
                 <form onSubmit={sendMessage} className="InputArea border-2 border-gray-700 bg-gray-900 absolute bottom-0 w-full h-auto">
-                    <div className="relative flex flex-row">
+                    <ChatInputContainer>
                             <textarea maxLength={130} className="bg-gray-950 ml-1 w-full overflow-auto no-scrollbar"
                                 value={content}
                                 onChange={(e) => setContent(e.target.value)} 
@@ -90,7 +90,7 @@ const Chat = ({Username,
                                     setContent((content) => content.concat(emoji))
                                 }
                             />
-                    </div>
+                    </ChatInputContainer>
                 </form> 
         
             </StyledChatContainer>
@@ -127,3 +127,9 @@ const StyledMessagesContainer = styled.div`
     --tw-text-opacity: 1;
     color: rgb(203 213 225 / var(--tw-text-opacity));
 `;
+
+const ChatInputContainer = styled.div`  
+    display:  flex;
+    flex-direction: row;
+    position: relative;
+`
