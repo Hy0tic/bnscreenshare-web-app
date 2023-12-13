@@ -26,8 +26,8 @@ const servers = {
 }
 const streamSetting = {
     video: {
-        width: { ideal: 1920, max: 1920 },
-        height: { ideal: 1080, max: 1080 },
+        width: { ideal: 2560, max: 2560  },
+        height: { ideal: 1440, max: 1440 },
         frameRate: { ideal: 60, max: 60 }
     }, 
     audio: {
