@@ -1,5 +1,6 @@
 import { TextInput, Button, Box } from '@mantine/core';
 import { useForm } from '@mantine/form';
+import styled from 'styled-components';
 
 const LobbyForm = ({
         handleJoinLobby,
@@ -25,41 +26,78 @@ const LobbyForm = ({
 
     return (
         <Box className=" bg-gray-800 rounded-lg w-1/3 h-4/6 relative drop-shadow-lg m-10 mt-0 mb-0">
-            <div className="Join-Lobby border-b-2 border-slate-700">
+            <StyledJoinLobbySection>
                 <form onSubmit={form.onSubmit((input) => handleJoinLobby(input))}>
-                    <div className="mx-3">
-                        <div className="text-md font-semibold text-gray-500 p-1">Lobby Id</div>
+                    <StyledInputContainer>
+                        <StyledLabel>Lobby Id</StyledLabel>
                         <TextInput
                             placeholder="23a4e"
                             radius="md"
                             size="md"
                             {...form.getInputProps('lobbyId')}
                         />
-                    </div>
+                    </StyledInputContainer>
 
-                    <div className="mx-3">
-                        <div className="text-md font-semibold text-gray-500 p-1">Username</div>
-                                                    <TextInput
-                                                    placeholder="Varvalian"
-                                                    radius="md"
-                                                    size="md"
-                                                    {...form.getInputProps('username')}
-                                                    />
-                    </div>
+                    <StyledInputContainer>
+                        <StyledLabel>Username</StyledLabel>
+                        <TextInput
+                            placeholder="Varvalian"
+                            radius="md"
+                            size="md"
+                            {...form.getInputProps('username')}
+                        />
+                    </StyledInputContainer>
 
-                    <div className="px-8 m-3 justify-center items-center flex flex-row">
+                    <StyledJoinLobbyButtonContainer>
                         <Button variant="outline" color="gray" type="submit">Join Lobby</Button>
-                    </div>
+                    </StyledJoinLobbyButtonContainer>
                 </form>
-            </div>
+            </StyledJoinLobbySection>
 
             <div className="Host-Lobby h-1/3">
-                    <div className="m-3 mt-8 justify-center items-center flex flex-row">
+                    <StyledHostLobbyButtonContainer>
                         <Button variant="outline" color="gray" onClick={createLobby}>Host Lobby</Button>
-                    </div>
+                    </StyledHostLobbyButtonContainer>
             </div>
         </Box>
     )
 }
 
 export default LobbyForm;
+
+const StyledJoinLobbySection = styled.div`
+    border-bottom-width: 2px;
+    --tw-border-opacity: 1;
+    border-color: rgb(51 65 85 / var(--tw-border-opacity));
+`;
+
+const StyledLabel = styled.div`
+    font-weight: 600;
+    --tw-text-opacity: 1;
+    color: rgb(107 114 128 / var(--tw-text-opacity));
+    padding: 0.25rem;
+`;
+
+const StyledJoinLobbyButtonContainer = styled.div`
+    padding-left: 2rem;
+    padding-right: 2rem;
+    margin: 0.75rem;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+`;
+
+const StyledHostLobbyButtonContainer = styled.div`
+    margin: 0.75rem;
+    margin-top: 2rem;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+`;
+
+const StyledInputContainer = styled.div`
+    margin-left: 0.75rem;
+    margin-right: 0.75rem;
+`;
