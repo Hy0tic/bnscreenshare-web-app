@@ -11,15 +11,18 @@ type Message =
 }
 
 const Chat = ({Username,
-    LobbyId,
-    isEnabled,
-    usernameColors
+        LobbyId,
+        isEnabled,
+        usernameColors
     } 
-    :
-    {Username: string,
-    LobbyId : string,
-    isEnabled : boolean,
-    usernameColors: number[]}) => {
+        :
+    {
+        Username: string,
+        LobbyId : string,
+        isEnabled : boolean,
+        usernameColors: number[]
+    }) => {
+        
     const [messages, setMessages] = useState<Message[]>([]);
     const [content, setContent] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -110,10 +113,11 @@ const StyledChatContainer = styled.div`
     height: 90vh;
     width: 20%;
     --tw-bg-opacity: 1;
-    background-color: rgb(17 24 39 / var(--tw-bg-opacity));
+    background-color: rgb(5 10 19 / var(--tw-bg-opacity));
     border-radius: 0.375rem;
     overflow: hidden;
-    border-left: solid gray 1px;
+    border: solid 1px;
+    border-color: rgb(10,10,10);
 `;
 
 const StyledMessagesContainer = styled.div`
